@@ -66,14 +66,12 @@ function VideoModal({
             src={embedUrl}
             title={video.title}
             className="absolute inset-0 w-full h-full"
-            style={{ pointerEvents: "none" }}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-          {/* Overlay anti-fuga - bloqueia toda interacao direta com o iframe do YouTube */}
+          {/* Tarja preta no topo - esconde titulo/logo do YouTube para evitar fuga */}
           <div
-            className="absolute inset-0 bg-transparent"
-            style={{ zIndex: 999, pointerEvents: "auto" }}
+            className="absolute top-0 inset-x-0 h-10 bg-background z-10"
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
             aria-hidden="true"

@@ -35,13 +35,22 @@ export function AppHeader() {
             {daysLeft} dias grátis
           </span>
         </div>
-        <button
-          className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-secondary transition-colors hover:bg-secondary/80"
-          aria-label="Notificações"
-        >
-          <Bell className="w-4 h-4 text-muted-foreground" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary" />
-        </button>
+        <div className="relative group">
+          <button
+            onClick={() => setNotificationsOpen(!notificationsOpen)}
+            className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-secondary transition-colors hover:bg-secondary/80"
+            aria-label="Notificacoes"
+          >
+            <Bell className="w-4 h-4 text-muted-foreground" />
+            {/* Ponto vermelho de notificacao */}
+            <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-destructive border-2 border-background" />
+          </button>
+          {/* Tooltip */}
+          <div className="absolute right-0 top-full mt-1.5 px-2.5 py-1 rounded-lg bg-foreground text-background text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+            Novidades em breve
+          </div>
+        </div>
+        <NotificationsPanel open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
       </div>
     </header>
   )

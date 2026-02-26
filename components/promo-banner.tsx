@@ -80,10 +80,13 @@ export function PromoBanner({ onOpenPro, onNavigateToTab }: PromoBannerProps) {
   const handleBannerClick = (banner: Banner) => {
     if (banner.action === "pro") {
       onOpenPro()
-    } else if (banner.action === "lojinha") {
-      onNavigateToTab("arsenal")
-    } else if (banner.action === "external") {
-      // Navegar internamente em vez de abrir aba externa
+    } else if (banner.id === "b3") {
+      // Kits Biohacker -> aba kits do Arsenal
+      onNavigateToTab("arsenal:kits")
+    } else if (banner.id === "b1") {
+      // Rotina Blindada -> aba digital do Arsenal
+      onNavigateToTab("arsenal:digital")
+    } else {
       onNavigateToTab("arsenal")
     }
   }

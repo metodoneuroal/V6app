@@ -47,11 +47,11 @@ export function StickyAudioPlayer() {
               />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-foreground truncate">
+              <p className="text-xs font-bold text-foreground truncate">
                 {currentTrack.title}
               </p>
               {currentTrack.subtitle && (
-                <p className="text-[10px] text-muted-foreground truncate">
+                <p className="text-[10px] text-muted-foreground/70 truncate">
                   {currentTrack.subtitle}
                 </p>
               )}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useAudioPlayer } from "@/lib/audio-context"
-import { Play, Pause, X, RotateCcw, RotateCw, Repeat } from "lucide-react"
+import { Play, Pause, X, SkipBack, SkipForward, Repeat } from "lucide-react"
 
 function formatTime(seconds: number): string {
   if (!seconds || !isFinite(seconds)) return "0:00"
@@ -35,20 +35,17 @@ export function StickyAudioPlayer() {
             boxShadow: `0 -4px 20px rgba(0,0,0,0.3), 0 0 15px ${accentColor}15`,
           }}
         >
-          {/* Top row: info + controls */}
-          <div className="flex items-center gap-3">
-            {/* Track thumbnail */}
+          {/* Track name - central */}
+          <div className="flex items-center gap-2">
             <div
-              className="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+              className="flex items-center justify-center w-6 h-6 rounded-md shrink-0"
               style={{ background: `${accentColor}15` }}
             >
               <div
-                className="w-3 h-3 rounded-full"
+                className="w-2 h-2 rounded-full"
                 style={{ background: accentColor }}
               />
             </div>
-
-            {/* Track info */}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">
                 {currentTrack.title}
@@ -59,55 +56,56 @@ export function StickyAudioPlayer() {
                 </p>
               )}
             </div>
+            <button
+              onClick={stop}
+              className="flex items-center justify-center w-6 h-6 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+              aria-label="Fechar player"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
 
-            {/* Controls */}
-            <div className="flex items-center gap-1 shrink-0">
-              <button
-                onClick={skipBackward}
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Voltar 15 segundos"
-              >
-                <RotateCcw className="w-3 h-3" />
-              </button>
-              <button
-                onClick={() => (isPlaying ? pause() : resume())}
-                className="flex items-center justify-center w-8 h-8 rounded-full transition-all"
-                style={{ background: `${accentColor}20` }}
-                aria-label={isPlaying ? "Pausar" : "Continuar"}
-              >
-                {isPlaying ? (
-                  <Pause className="w-3.5 h-3.5" style={{ color: accentColor }} />
-                ) : (
-                  <Play className="w-3.5 h-3.5 ml-0.5" style={{ color: accentColor }} />
-                )}
-              </button>
-              <button
-                onClick={skipForward}
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Avancar 15 segundos"
-              >
-                <RotateCw className="w-3 h-3" />
-              </button>
-              <button
-                onClick={toggleLoop}
-                className={`flex items-center justify-center w-7 h-7 rounded-full transition-colors ${
-                  isLooping
-                    ? "text-primary-foreground"
-                    : "bg-secondary/60 text-muted-foreground hover:text-foreground"
-                }`}
-                style={isLooping ? { background: accentColor } : undefined}
-                aria-label={isLooping ? "Desativar loop" : "Ativar loop"}
-              >
-                <Repeat className="w-3 h-3" />
-              </button>
-              <button
-                onClick={stop}
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Fechar player"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
+          {/* Controls row */}
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={toggleLoop}
+              className={`flex items-center justify-center w-7 h-7 rounded-full transition-colors ${
+                isLooping
+                  ? "text-primary-foreground"
+                  : "bg-secondary/60 text-muted-foreground hover:text-foreground"
+              }`}
+              style={isLooping ? { background: accentColor } : undefined}
+              aria-label={isLooping ? "Desativar loop" : "Ativar loop"}
+            >
+              <Repeat className="w-3 h-3" />
+            </button>
+            <button
+              onClick={skipBackward}
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Faixa anterior"
+            >
+              <SkipBack className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => (isPlaying ? pause() : resume())}
+              className="flex items-center justify-center w-10 h-10 rounded-full transition-all"
+              style={{ background: `${accentColor}20` }}
+              aria-label={isPlaying ? "Pausar" : "Continuar"}
+            >
+              {isPlaying ? (
+                <Pause className="w-4 h-4" style={{ color: accentColor }} />
+              ) : (
+                <Play className="w-4 h-4 ml-0.5" style={{ color: accentColor }} />
+              )}
+            </button>
+            <button
+              onClick={skipForward}
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Proxima faixa"
+            >
+              <SkipForward className="w-3.5 h-3.5" />
+            </button>
+            <div className="w-7" aria-hidden="true" />
           </div>
 
           {/* Progress bar */}

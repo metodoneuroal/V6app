@@ -555,19 +555,26 @@ export function MorningActivation() {
                   const filledFields = Object.entries(log.fields).filter(
                     ([, v]) => v.trim().length > 0
                   )
-                  const checkPercent = Math.round((log.completedItems / log.totalItems) * 100)
+                  const totalReflectionFields = Object.keys(log.fields).length
                   return (
                     <AccordionItem key={log.id} value={log.id} className="border-border/20">
                       <div className="flex items-center pr-2">
                         <AccordionTrigger className="flex-1 px-3 py-2.5 hover:no-underline">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-3 h-3 text-[#FF8C42] shrink-0" />
-                            <span className="text-[11px] font-mono text-muted-foreground">
-                              {log.displayDate}
-                            </span>
-                            <span className="text-[10px] font-bold text-primary ml-1">
-                              {checkPercent}%
-                            </span>
+                          <div className="flex flex-col items-start gap-0.5">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-3 h-3 text-[#FF8C42] shrink-0" />
+                              <span className="text-[11px] font-mono text-muted-foreground">
+                                {log.displayDate}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3 ml-5">
+                              <span className="text-[10px] font-medium text-primary">
+                                {"Checklist: "}{log.completedItems}/{log.totalItems}{" concluido"}
+                              </span>
+                              <span className="text-[10px] font-medium text-[#A78BFA]">
+                                {"Reflexoes: "}{filledFields.length}/{totalReflectionFields}{" preenchidas"}
+                              </span>
+                            </div>
                           </div>
                         </AccordionTrigger>
                         <button

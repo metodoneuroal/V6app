@@ -295,5 +295,5 @@ export function getYouTubeVideoId(url: string): string | null {
 export function getYouTubeEmbedUrl(url: string): string | null {
   const videoId = getYouTubeVideoId(url)
   if (!videoId) return null
-  return `https://www.youtube.com/embed/${videoId}?controls=0&modestbranding=1&rel=0`
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&disablekb=1&fs=0&iv_load_policy=3`
 }

@@ -72,7 +72,7 @@ function VideoModal({
           />
           {/* Overlay anti-fuga - bloqueia toda interacao direta com o iframe do YouTube */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 bg-transparent"
             style={{ zIndex: 999, pointerEvents: "auto" }}
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}

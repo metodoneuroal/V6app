@@ -22,7 +22,6 @@ const banners: Banner[] = [
     subtitle: "Seu checklist de elite para alta performance.",
     cta: "Conhecer Agora",
     action: "external",
-    url: "https://kirvano.com/rotina-blindada",
     accentColor: "#00D4FF",
     icon: <Zap className="w-6 h-6" />,
   },
@@ -43,7 +42,7 @@ const banners: Banner[] = [
     action: "lojinha",
     accentColor: "#34D399",
     icon: <ShoppingBag className="w-6 h-6" />,
-  },
+  } as Banner,
 ]
 
 interface PromoBannerProps {
@@ -82,9 +81,10 @@ export function PromoBanner({ onOpenPro, onNavigateToTab }: PromoBannerProps) {
     if (banner.action === "pro") {
       onOpenPro()
     } else if (banner.action === "lojinha") {
-      onNavigateToTab("lojinha")
-    } else if (banner.action === "external" && banner.url) {
-      window.open(banner.url, "_blank", "noopener,noreferrer")
+      onNavigateToTab("arsenal")
+    } else if (banner.action === "external") {
+      // Navegar internamente em vez de abrir aba externa
+      onNavigateToTab("arsenal")
     }
   }
 

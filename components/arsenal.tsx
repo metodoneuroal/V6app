@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import { ProModal } from "@/components/pro-modal"
 import {
   ShoppingBag,
   ExternalLink,
@@ -228,6 +229,7 @@ function StockBadge({ stock }: { stock?: number }) {
 export function Arsenal() {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"kits" | "digital" | "drop">("kits")
+  const [proModalOpen, setProModalOpen] = useState(false)
 
   return (
     <section className="px-5 pt-2 pb-32 relative">
@@ -273,13 +275,13 @@ export function Arsenal() {
             <Clock className="w-3.5 h-3.5 text-[#F59E0B]" />
             <span className="text-[11px] font-bold text-[#F59E0B]">8 dias gratis restantes</span>
           </div>
-          <a
-            href="https://kirvano.com/neuron-pro"
+          <button
+            onClick={() => setProModalOpen(true)}
             className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#F97316] text-[#07070D] text-sm font-bold transition-all active:scale-[0.97] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
           >
             <Crown className="w-4 h-4" />
-            DESBLOQUEAR NEURON PRO AGORA
-          </a>
+            ASSINAR AGORA
+          </button>
         </div>
       </div>
 
@@ -546,7 +548,7 @@ export function Arsenal() {
         </div>
       )}
 
-      {/* Floating WhatsApp Button removed */}
+      <ProModal open={proModalOpen} onClose={() => setProModalOpen(false)} />
     </section>
   )
 }

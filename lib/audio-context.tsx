@@ -83,12 +83,6 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
 
   const play = useCallback(
     (track: AudioTrack) => {
-      // Spotify: open external and don't use audio player
-      if (track.source === "spotify") {
-        window.open(track.url, "_blank", "noopener,noreferrer")
-        return
-      }
-
       // If same track, just resume
       if (audioRef.current && state.currentTrack?.id === track.id) {
         audioRef.current.play().catch(() => {})
@@ -119,8 +113,8 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       })
 
       audio.play().catch(() => {
-        // Fallback: open URL
-        window.open(track.url, "_blank", "noopener,noreferrer")
+        // Audio failed to play - update state but stay in-app
+        setState((prev) => ({ ...prev, isPlaying: false }))
       })
 
       setState({

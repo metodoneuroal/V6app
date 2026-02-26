@@ -1,7 +1,7 @@
 "use client"
 
 import { useAudioPlayer } from "@/lib/audio-context"
-import { Play, Pause, X } from "lucide-react"
+import { Play, Pause, X, RotateCcw, RotateCw, Repeat } from "lucide-react"
 
 function formatTime(seconds: number): string {
   if (!seconds || !isFinite(seconds)) return "0:00"
@@ -11,7 +11,7 @@ function formatTime(seconds: number): string {
 }
 
 export function StickyAudioPlayer() {
-  const { currentTrack, isPlaying, progress, duration, pause, resume, stop, seekTo } =
+  const { currentTrack, isPlaying, progress, duration, pause, resume, stop, seekTo, skipForward, skipBackward, toggleLoop, isLooping } =
     useAudioPlayer()
 
   if (!currentTrack) return null
@@ -61,7 +61,14 @@ export function StickyAudioPlayer() {
             </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={skipBackward}
+                className="flex items-center justify-center w-7 h-7 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Voltar 15 segundos"
+              >
+                <RotateCcw className="w-3 h-3" />
+              </button>
               <button
                 onClick={() => (isPlaying ? pause() : resume())}
                 className="flex items-center justify-center w-8 h-8 rounded-full transition-all"
@@ -75,8 +82,27 @@ export function StickyAudioPlayer() {
                 )}
               </button>
               <button
+                onClick={skipForward}
+                className="flex items-center justify-center w-7 h-7 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Avancar 15 segundos"
+              >
+                <RotateCw className="w-3 h-3" />
+              </button>
+              <button
+                onClick={toggleLoop}
+                className={`flex items-center justify-center w-7 h-7 rounded-full transition-colors ${
+                  isLooping
+                    ? "text-primary-foreground"
+                    : "bg-secondary/60 text-muted-foreground hover:text-foreground"
+                }`}
+                style={isLooping ? { background: accentColor } : undefined}
+                aria-label={isLooping ? "Desativar loop" : "Ativar loop"}
+              >
+                <Repeat className="w-3 h-3" />
+              </button>
+              <button
                 onClick={stop}
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-secondary/60 text-muted-foreground"
+                className="flex items-center justify-center w-7 h-7 rounded-full bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Fechar player"
               >
                 <X className="w-3 h-3" />

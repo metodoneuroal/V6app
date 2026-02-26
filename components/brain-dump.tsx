@@ -17,6 +17,12 @@ import {
   Loader2,
 } from "lucide-react"
 import { ProModal } from "@/components/pro-modal"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 const STORAGE_KEY = "neural-braindump-notes"
 const FREE_CHAR_LIMIT = 500
@@ -80,6 +86,7 @@ export function BrainDump() {
   const [proModalOpen, setProModalOpen] = useState(false)
   const [analyzePhase, setAnalyzePhase] = useState<AnalyzePhase>("idle")
   const [loadingMsg, setLoadingMsg] = useState(loadingMessages[0])
+  const [selectedNote, setSelectedNote] = useState<SavedNote | null>(null)
 
   useEffect(() => {
     setNotes(loadNotes())
@@ -310,7 +317,12 @@ export function BrainDump() {
             {(showHistory ? notes : notes.slice(0, 3)).map((note) => (
               <div
                 key={note.id}
-                className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl bg-card/60 border border-border/30"
+                className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl bg-card/60 border border-border/30 cursor-pointer hover:border-primary/20 transition-colors"
+                onClick={() => setSelectedNote(note)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter") setSelectedNote(note) }}
+                aria-label={`Abrir nota de ${note.savedAt}`}
               >
                 <div className="w-1 h-full min-h-[2rem] rounded-full bg-primary/30 shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -322,7 +334,10 @@ export function BrainDump() {
                   </p>
                 </div>
                 <button
-                  onClick={() => handleDeleteNote(note.id)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleDeleteNote(note.id)
+                  }}
                   className="shrink-0 flex items-center justify-center w-6 h-6 rounded-md bg-secondary/60 text-muted-foreground hover:text-destructive transition-colors"
                   aria-label={`Excluir nota de ${note.savedAt}`}
                 >
@@ -451,6 +466,40 @@ export function BrainDump() {
           </div>
         </div>
       </div>
+
+      {/* Modal de leitura completa da nota */}
+      <Dialog open={!!selectedNote} onOpenChange={(open) => { if (!open) setSelectedNote(null) }}>
+        <DialogContent className="max-w-md mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-sm">
+              <FileText className="w-4 h-4 text-primary" />
+              Nota - {selectedNote?.savedAt}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="overflow-y-auto flex-1 pr-1">
+            <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+              {selectedNote?.text}
+            </p>
+          </div>
+          <div className="flex items-center justify-between pt-3 border-t border-border/30">
+            <span className="text-[10px] text-muted-foreground font-mono">
+              {selectedNote?.text.length} caracteres
+            </span>
+            <button
+              onClick={() => {
+                if (selectedNote) {
+                  handleDeleteNote(selectedNote.id)
+                  setSelectedNote(null)
+                }
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive text-xs font-medium hover:bg-destructive/20 transition-colors"
+            >
+              <Trash2 className="w-3 h-3" />
+              Excluir
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <ProModal open={proModalOpen} onClose={() => setProModalOpen(false)} />
     </section>

@@ -66,10 +66,11 @@ function VideoModal({
             src={embedUrl}
             title={video.title}
             className="absolute inset-0 w-full h-full"
+            style={{ pointerEvents: "none" }}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-          {/* Overlay anti-fuga - bloqueia cliques que levam para fora do app */}
+          {/* Overlay anti-fuga - bloqueia toda interacao direta com o iframe do YouTube */}
           <div
             className="absolute inset-0"
             style={{ zIndex: 999, pointerEvents: "auto" }}

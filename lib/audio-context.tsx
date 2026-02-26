@@ -26,6 +26,10 @@ interface AudioPlayerContextType extends AudioPlayerState {
   stop: () => void
   toggle: (track: AudioTrack) => void
   seekTo: (fraction: number) => void
+  skipForward: () => void
+  skipBackward: () => void
+  toggleLoop: () => void
+  isLooping: boolean
   isCurrentTrack: (id: string) => boolean
 }
 
@@ -44,6 +48,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     progress: 0,
     duration: 0,
   })
+  const [isLooping, setIsLooping] = useState(false)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const rafRef = useRef<number | null>(null)
@@ -101,6 +106,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
 
       const audio = new Audio(track.url)
       audio.crossOrigin = "anonymous"
+      audio.loop = isLooping
       audioRef.current = audio
 
       audio.addEventListener("ended", () => {
@@ -159,6 +165,31 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const skipForward = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(
+        audioRef.current.currentTime + 15,
+        audioRef.current.duration || Infinity
+      )
+    }
+  }, [])
+
+  const skipBackward = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 15, 0)
+    }
+  }, [])
+
+  const toggleLoop = useCallback(() => {
+    setIsLooping((prev) => {
+      const next = !prev
+      if (audioRef.current) {
+        audioRef.current.loop = next
+      }
+      return next
+    })
+  }, [])
+
   const isCurrentTrack = useCallback(
     (id: string) => state.currentTrack?.id === id,
     [state.currentTrack?.id]
@@ -185,6 +216,10 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
         stop,
         toggle,
         seekTo,
+        skipForward,
+        skipBackward,
+        toggleLoop,
+        isLooping,
         isCurrentTrack,
       }}
     >

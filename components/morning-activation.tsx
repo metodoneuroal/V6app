@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Sunrise, Check, RotateCcw, ChevronDown, ChevronUp, Headphones, Lock, History, Calendar, Trash2, Save, Pause } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { useAudioPlayer, type AudioTrack } from "@/lib/audio-context"
 import { playlistLinks, isSpotifyUrl, isGoogleDriveUrl, getGoogleDriveAudioUrl } from "@/lib/media-links"
 
@@ -548,60 +549,62 @@ export function MorningActivation() {
           </button>
 
           {showHistorySection && (
-            <div className="space-y-2.5 max-h-80 overflow-y-auto">
-              {activationHistory.map((log) => {
-                const filledFields = Object.entries(log.fields).filter(
-                  ([, v]) => v.trim().length > 0
-                )
-                return (
-                  <div
-                    key={log.id}
-                    className="rounded-xl bg-card/60 border border-border/30 overflow-hidden"
-                  >
-                    {/* Log header */}
-                    <div className="flex items-center justify-between px-3 py-2 bg-secondary/30">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3 h-3 text-[#FF8C42]" />
-                        <span className="text-[10px] font-mono text-muted-foreground">
-                          {log.displayDate}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-medium text-primary">
-                          {log.completedItems}/{log.totalItems} checklist
-                        </span>
+            <div className="max-h-96 overflow-y-auto rounded-xl border border-border/30 bg-card/60">
+              <Accordion type="single" collapsible className="w-full">
+                {activationHistory.map((log) => {
+                  const filledFields = Object.entries(log.fields).filter(
+                    ([, v]) => v.trim().length > 0
+                  )
+                  const checkPercent = Math.round((log.completedItems / log.totalItems) * 100)
+                  return (
+                    <AccordionItem key={log.id} value={log.id} className="border-border/20">
+                      <div className="flex items-center pr-2">
+                        <AccordionTrigger className="flex-1 px-3 py-2.5 hover:no-underline">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-3 h-3 text-[#FF8C42] shrink-0" />
+                            <span className="text-[11px] font-mono text-muted-foreground">
+                              {log.displayDate}
+                            </span>
+                            <span className="text-[10px] font-bold text-primary ml-1">
+                              {checkPercent}%
+                            </span>
+                          </div>
+                        </AccordionTrigger>
                         <button
-                          onClick={() => deleteHistoryEntry(log.id)}
-                          className="flex items-center justify-center w-5 h-5 rounded bg-secondary/60 text-muted-foreground hover:text-destructive transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            deleteHistoryEntry(log.id)
+                          }}
+                          className="flex items-center justify-center w-5 h-5 rounded bg-secondary/60 text-muted-foreground hover:text-destructive transition-colors shrink-0"
                           aria-label="Excluir entrada"
                         >
                           <Trash2 className="w-2.5 h-2.5" />
                         </button>
                       </div>
-                    </div>
-
-                    {/* Log content */}
-                    <div className="px-3 py-2 space-y-1.5">
-                      {filledFields.map(([key, value]) => {
-                        const cfg = fieldConfigs.find((c) => c.key === key)
-                        return (
-                          <div key={key}>
-                            <span
-                              className="text-[9px] font-semibold uppercase tracking-wider"
-                              style={{ color: cfg?.color || "#888" }}
-                            >
-                              {cfg?.label || key}
-                            </span>
-                            <p className="text-[11px] text-foreground/80 leading-relaxed line-clamp-2">
-                              {value}
-                            </p>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
+                      <AccordionContent className="px-3 pb-3">
+                        <div className="space-y-1.5">
+                          {filledFields.map(([key, value]) => {
+                            const cfg = fieldConfigs.find((c) => c.key === key)
+                            return (
+                              <div key={key}>
+                                <span
+                                  className="text-[9px] font-semibold uppercase tracking-wider"
+                                  style={{ color: cfg?.color || "#888" }}
+                                >
+                                  {cfg?.label || key}
+                                </span>
+                                <p className="text-[11px] text-foreground/80 leading-relaxed">
+                                  {value}
+                                </p>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  )
+                })}
+              </Accordion>
             </div>
           )}
         </div>
